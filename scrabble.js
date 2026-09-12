@@ -32,20 +32,30 @@ $('check').onclick=async()=>{
  const step=horizontal?1:10;
  if(positions.some((v,i)=>i&&v-positions[i-1]!==step)){say('Kata tidak boleh memiliki celah. Susun huruf baru berdampingan.');result('Masih ada celah di antara huruf.','error');return}
  const word=positions.map(i=>pending.get(i)).join('');busy=true;render();say(`Memeriksa “${word}” di kamus…`);
- const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
- result(`Memeriksa “${word}” di kamus bahasa Inggris…`);
- try{const response=await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`,{signal:controller.signal});
- if(response.status===404){say(`“${word}” belum ditemukan di kamus. Coba susunan lain.`);result(`“${word}” tidak ditemukan. Skor tidak berubah.`,'error');return}
- if(!response.ok)throw new Error('dictionary');const data=await response.json();if(!Array.isArray(data)||!data.length)throw new Error('dictionary');
- const entry=data.find(entry=>typeof entry.word==='string'&&entry.word.toLowerCase()===word.toLowerCase()&&entry.meanings?.some(m=>m.definitions?.some(d=>typeof d.definition==='string')));
- if(!entry)throw new Error('No matching dictionary entry');
- const definition=entry.meanings.flatMap(m=>m.definitions||[]).find(d=>typeof d.definition==='string').definition;
+ result(`Memeriksa ?${word}? di daftar kata Inggris lokal?`);
+ try{
+ if(!(window.ENGLISH_WORDS instanceof Set)||window.ENGLISH_WORDS.size<1000)throw new Error('Missing local dictionary');
+ if(!window.ENGLISH_WORDS.has(word.toLowerCase())){say(`?${word}? tidak ada di daftar kata Inggris lokal.`);result(`?${word}? tidak ditemukan. Skor tidak berubah.`,'error');return}
  const gained=[...pending.values()].reduce((n,l)=>n+points[l],0),added=7-rack.length;
  for(const [i,l]of pending)cells[i]=l;pending.clear();total+=gained;wordCount++;best=Math.max(best,total);saveBest('little-scrabble-best',best);refill();
  result(`${word} benar! +${gained} poin · ${added} huruf baru ditambahkan.`,'success');
  const item=document.createElement('li'),detail=document.createElement('div'),label=document.createElement('b'),meaning=document.createElement('p'),score=document.createElement('strong');
- label.textContent=word;meaning.textContent=definition;meaning.lang='en';score.textContent=`+${gained}`;detail.append(label,meaning);item.append(detail,score);$('wordHistory').prepend(item);$('wordEmpty').hidden=true;
- say(`“${word}” ada di kamus bahasa Inggris. +${gained} poin; rak kembali berisi 7 huruf.`);
- }catch{say('Kamus tidak dapat dihubungi. Periksa koneksi lalu coba lagi; hurufmu tetap di papan.');result('Kamus belum bisa dihubungi. Coba lagi; skor dan huruf tetap aman.','error')}finally{clearTimeout(timer);busy=false;render()}
+ label.textContent=word;meaning.textContent='Terdaftar dalam daftar kata Inggris lokal.';score.textContent=`+${gained}`;detail.append(label,meaning);item.append(detail,score);$('wordHistory').prepend(item);$('wordEmpty').hidden=true;
+ void loadDefinition(word,meaning);
+ say(`“${word}” ada di daftar kata Inggris lokal. +${gained} poin; rak kembali berisi 7 huruf.`);
+ }catch{say('File kamus lokal belum termuat. Refresh halaman dan pastikan folder data tersedia.');result('Kamus lokal belum termuat; skor dan huruf tetap aman.','error')}finally{busy=false;render()}
 };
 refill();render();
+
+// Definitions enrich the history but never delay or change scoring.
+async function loadDefinition(word,element){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+ try{
+ const response=await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`,{signal:controller.signal});
+ if(!response.ok)return;
+ const data=await response.json();
+ const entry=Array.isArray(data)&&data.find(e=>typeof e.word==='string'&&e.word.toLowerCase()===word.toLowerCase());
+ const definition=entry?.meanings?.flatMap(m=>m.definitions||[]).find(d=>typeof d.definition==='string')?.definition;
+ if(definition&&element.isConnected){element.textContent=definition;element.lang='en'}
+ }catch{/* Keep the honest local-list message when definitions are unavailable. */}finally{clearTimeout(timer)}
+}
