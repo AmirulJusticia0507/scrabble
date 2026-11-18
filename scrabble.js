@@ -1,12 +1,24 @@
 /**
  * Little Arcade — Scrabble (Game 01)
- * Mode Latihan / Solo Practice kata 10x10 dengan kamus offline lokal.
+ * Mode Latihan / Solo Practice kata 10x10 dengan petak bonus (2L, 2W) & kamus offline lokal.
  */
 
 const points = {
   A: 1, B: 3, C: 3, D: 2, E: 1, F: 4, G: 2, H: 4, I: 1, J: 8,
   K: 5, L: 1, M: 3, N: 1, O: 1, P: 3, Q: 10, R: 1, S: 1, T: 1,
   U: 1, V: 4, W: 4, X: 8, Y: 4, Z: 10
+};
+
+// Konfigurasi Petak Bonus Sembilan Belas Petak Simetris (2W = Double Word, 2L = Double Letter)
+const bonuses = {
+  // Double Word (2W): Nilai total kata dilipatgandakan 2x
+  0: '2W', 9: '2W', 90: '2W', 99: '2W',
+  22: '2W', 27: '2W', 72: '2W', 77: '2W',
+
+  // Double Letter (2L): Nilai huruf pada petak ini dilipatgandakan 2x
+  4: '2L', 5: '2L', 94: '2L', 95: '2L',
+  40: '2L', 50: '2L', 49: '2L', 59: '2L',
+  33: '2L', 36: '2L', 63: '2L', 66: '2L'
 };
 
 const bag = 'AAAAAAAABCDEEEEEEEEEFGHIIIIIIJKLMNNOOOOOPRRRRSSSSTTTTTUUUVWY';
@@ -47,9 +59,25 @@ function render() {
     cells.forEach((letter, i) => {
       const tile = pending.get(i) || letter;
       const b = document.createElement('button');
-      b.className = 'cell' + (tile ? ' filled' : '') + (pending.has(i) ? ' pending' : '');
-      b.innerHTML = tile ? `${tile}<small>${points[tile]}</small>` : (i === 44 ? '✦' : '');
-      b.setAttribute('aria-label', `Baris ${Math.floor(i / 10) + 1}, kolom ${(i % 10) + 1}${tile ? ', ' + tile : ''}`);
+      const bonus = bonuses[i];
+      let bonusClass = '';
+      if (!tile && bonus === '2W') bonusClass = ' bonus-2w';
+      else if (!tile && bonus === '2L') bonusClass = ' bonus-2l';
+
+      b.className = 'cell' + (tile ? ' filled' : '') + (pending.has(i) ? ' pending' : '') + bonusClass;
+
+      if (tile) {
+        b.innerHTML = `${tile}<small>${points[tile]}</small>`;
+      } else if (bonus) {
+        b.innerHTML = bonus;
+      } else if (i === 44) {
+        b.innerHTML = '✦';
+      } else {
+        b.innerHTML = '';
+      }
+
+      const bonusLabel = bonus ? `, petak bonus ${bonus}` : '';
+      b.setAttribute('aria-label', `Baris ${Math.floor(i / 10) + 1}, kolom ${(i % 10) + 1}${tile ? ', ' + tile : ''}${bonusLabel}`);
       b.disabled = busy;
 
       b.onclick = () => place(i);
@@ -179,7 +207,7 @@ function result(message, state = '') {
 }
 
 /**
- * Validasi dan perhitungan kata baru yang diletakkan
+ * Validasi dan perhitungan kata baru yang diletakkan beserta bonus 2L dan 2W
  */
 $('check').onclick = async () => {
   if (busy) return;
@@ -226,8 +254,36 @@ $('check').onclick = async () => {
       return;
     }
 
-    const gained = [...pending.values()].reduce((n, l) => n + points[l], 0);
+    // Kalkulasi skor dengan petak bonus (2L = Double Letter, 2W = Double Word)
+    let wordMultiplier = 1;
+    let letterBonusCount = 0;
+    let wordBonusCount = 0;
+    let baseLetterSum = 0;
+
+    for (const [i, l] of pending) {
+      let letterScore = points[l];
+      if (bonuses[i] === '2L') {
+        letterScore *= 2;
+        letterBonusCount++;
+      }
+      if (bonuses[i] === '2W') {
+        wordMultiplier *= 2;
+        wordBonusCount++;
+      }
+      baseLetterSum += letterScore;
+    }
+
+    const gained = baseLetterSum * wordMultiplier;
     const added = 7 - rack.length;
+
+    let bonusTag = '';
+    if (wordBonusCount > 0 && letterBonusCount > 0) {
+      bonusTag = ` (Bonus ${wordBonusCount}× 2W & ${letterBonusCount}× 2L!)`;
+    } else if (wordBonusCount > 0) {
+      bonusTag = ` (Bonus ${wordMultiplier}× Double Word!)`;
+    } else if (letterBonusCount > 0) {
+      bonusTag = ` (Bonus ${letterBonusCount}× Double Letter!)`;
+    }
 
     for (const [i, l] of pending) {
       cells[i] = l;
@@ -239,7 +295,7 @@ $('check').onclick = async () => {
     saveBest('little-scrabble-best', best);
     refill();
 
-    result(`${word} benar! +${gained} poin · ${added} huruf baru ditambahkan.`, 'success');
+    result(`${word} benar! +${gained} poin${bonusTag} · ${added} huruf baru ditambahkan.`, 'success');
 
     const item = document.createElement('li');
     const detail = document.createElement('div');
@@ -247,7 +303,7 @@ $('check').onclick = async () => {
     const meaning = document.createElement('p');
     const score = document.createElement('strong');
 
-    label.textContent = word;
+    label.textContent = word + (bonusTag ? ` ${bonusTag}` : '');
     meaning.textContent = 'Terdaftar dalam daftar kata Inggris lokal.';
     score.textContent = `+${gained}`;
 
@@ -257,7 +313,7 @@ $('check').onclick = async () => {
     $('wordEmpty').hidden = true;
 
     void loadDefinition(word, meaning);
-    say(`“${word}” ada di daftar kata Inggris lokal. +${gained} poin; rak kembali berisi 7 huruf.`);
+    say(`“${word}” ada di daftar kata Inggris lokal. +${gained} poin${bonusTag}; rak kembali berisi 7 huruf.`);
   } catch {
     say('File kamus lokal belum termuat. Refresh halaman dan pastikan folder data tersedia.');
     result('Kamus lokal belum termuat; skor dan huruf tetap aman.', 'error');

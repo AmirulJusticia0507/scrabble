@@ -51,7 +51,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Tambahkan tombol kontrol toggle suara di `index2.html` konsisten dengan Pachinko.
   - Commit & push ke repository.
 
-- [ ] **Task 4: Peningkatan Gameplay Scrabble (Petak Bonus & Skor Dinamis)**
+- [x] **Task 4: Peningkatan Gameplay Scrabble (Petak Bonus & Skor Dinamis)**
   - Tambahkan petak bonus (Double Letter `2L` dan Double Word `2W`) pada papan 10×10.
   - Perbarui style di `arcade.css` dan kalkulasi skor di `scrabble.js` untuk melipatgandakan poin secara akurat.
   - Perbarui petunjuk permainan di `index.html`.
