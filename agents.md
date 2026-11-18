@@ -83,6 +83,11 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Buat `README.md` utama di root repositori dengan dokumentasi proyek, panduan PWA, dan panduan deploy ke Vercel.
   - Commit & push penutup.
 
+- [x] **Task 10: Pembaruan & Visualisasi Petunjuk "Cara Bermain" (UX Enhancements)**
+  - Desain ulang komponen `.instructions` dengan penomoran badge arcade, tip callout, dan badge interaktif (`<kbd>`, `.badge-bonus`).
+  - Perbarui konten petunjuk di `index.html` (Scrabble), `index2.html` (Karambol), dan tambahkan petunjuk di `index3.html` (Pachinko).
+  - Commit & push ke repository.
+
 ---
 
 ## 4. Riwayat Pengerjaan (Changelog)
@@ -95,6 +100,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
 * **Task 6 (`08324d4`):** Verifikasi lintas file dan dokumentasi penutup.
 * **Task 7 (`6dd8bab`):** Konfigurasi PWA Web App Manifest (`manifest.json`), meta tags mobile/retina, dan pembuatan icon vektor SVG serta PNG (192px, 512px, maskable).
 * **Task 8 (`698af2c`):** Pembuatan Service Worker (`sw.js`) dengan strategi offline-first caching dan registrasi otomatis di `arcade.js`.
-* **Task 9:** Konfigurasi deployment `vercel.json` (clean URLs, rewrites, headers caching PWA) dan pembuatan `README.md` utama.
+* **Task 9 (`769c7ce`):** Konfigurasi deployment `vercel.json` (clean URLs, rewrites, headers caching PWA) dan pembuatan `README.md` utama.
+* **Task 10:** Redesain modul petunjuk "Cara Bermain" dengan penomoran badge, tips box, tombol keyboard `<kbd>`, chip bonus, dan penambahan panduan Pachinko.
 
 
