@@ -73,7 +73,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Tambahkan meta tags PWA (manifest, theme-color, apple-touch-icon, mobile-web-app) di `index.html`, `index2.html`, dan `index3.html`.
   - Commit & push ke repository.
 
-- [ ] **Task 8: Implementasi Service Worker & Offline Caching Engine**
+- [x] **Task 8: Implementasi Service Worker & Offline Caching Engine**
   - Buat `sw.js` (Service Worker) dengan strategi caching offline-first untuk shell, CSS, JS, dan kamus lokal.
   - Tambahkan registrasi Service Worker di `arcade.js` secara otomatis.
   - Commit & push ke repository.

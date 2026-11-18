@@ -68,3 +68,17 @@ const saveBest = (key, value) => {
     localStorage.setItem(key, value);
   } catch {}
 };
+
+// Registrasi Service Worker untuk Progressive Web App (PWA)
+if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('sw.js')
+      .then((reg) => {
+        console.log('[PWA] Service Worker aktif dengan scope:', reg.scope);
+      })
+      .catch((err) => {
+        console.warn('[PWA] Gagal mendaftarkan Service Worker:', err);
+      });
+  });
+}
