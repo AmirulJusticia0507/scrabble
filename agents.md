@@ -41,7 +41,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Bersihkan file artefak kosong `game scrabble amirul.txt`.
   - Commit & push ke repository.
 
-- [ ] **Task 2: Refactoring & Formatisasi Kode Inti**
+- [x] **Task 2: Refactoring & Formatisasi Kode Inti**
   - Format ulang JavaScript yang padat/semi-minified (`arcade.js`, `scrabble.js`, `carrom.js`, `pachinko.js`) menjadi kode terstruktur, bersih, dan berorientasi modularitas.
   - Pertahankan seluruh fungsionalitas dan logika eksisting tanpa regresi.
   - Commit & push ke repository.
