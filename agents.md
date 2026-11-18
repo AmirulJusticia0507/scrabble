@@ -46,7 +46,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Pertahankan seluruh fungsionalitas dan logika eksisting tanpa regresi.
   - Commit & push ke repository.
 
-- [ ] **Task 3: Efek Suara Web Audio API untuk Karambol (Carrom Sound FX)**
+- [x] **Task 3: Efek Suara Web Audio API untuk Karambol (Carrom Sound FX)**
   - Implementasikan sound engine menggunakan Web Audio API pada `carrom.js` (suara tabrakan koin, pantulan tepi papan, dan koin masuk lubang).
   - Tambahkan tombol kontrol toggle suara di `index2.html` konsisten dengan Pachinko.
   - Commit & push ke repository.

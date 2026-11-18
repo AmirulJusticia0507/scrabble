@@ -1,6 +1,6 @@
 /**
  * Little Arcade — Karambol / Carrom (Game 02)
- * Simulasi fisika 2D di Canvas dengan sub-stepping, tabrakan elastis, dan kontrol presisi.
+ * Simulasi fisika 2D di Canvas dengan sub-stepping, tabrakan elastis, dan Web Audio API sound effects.
  */
 
 const canvas = $('game');
@@ -22,6 +22,73 @@ let angle = -Math.PI / 2;
 let power = 40;
 let last = 0;
 let accumulator = 0;
+
+// Web Audio API State
+let sound = false;
+let audio = null;
+
+/**
+ * Mainkan efek suara sintetis (clack koin, pantulan dinding, koin masuk lubang)
+ */
+function playSound(type, intensity = 1) {
+  if (!sound || !audio) return;
+  try {
+    const t = audio.currentTime;
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.connect(gain);
+    gain.connect(audio.destination);
+
+    if (type === 'hit') {
+      // Benturan antar koin atau striker (clack tajam dan renyah)
+      const vol = Math.min(0.09, 0.02 + intensity * 0.015);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(650 + Math.random() * 200, t);
+      osc.frequency.exponentialRampToValueAtTime(130, t + 0.04);
+      gain.gain.setValueAtTime(vol, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+      osc.start(t);
+      osc.stop(t + 0.05);
+    } else if (type === 'wall') {
+      // Pantulan tepi kayu papan
+      const vol = Math.min(0.07, 0.015 + intensity * 0.01);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(180, t);
+      osc.frequency.exponentialRampToValueAtTime(60, t + 0.06);
+      gain.gain.setValueAtTime(vol, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+      osc.start(t);
+      osc.stop(t + 0.07);
+    } else if (type === 'pocket') {
+      // Koin masuk lubang sudut
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, t);
+      osc.frequency.exponentialRampToValueAtTime(640, t + 0.14);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+      osc.start(t);
+      osc.stop(t + 0.18);
+    }
+  } catch {}
+}
+
+// Handler Toggle Suara
+const soundBtn = $('sound');
+if (soundBtn) {
+  soundBtn.onclick = async () => {
+    sound = !sound;
+    if (sound) {
+      try {
+        audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+        await audio.resume();
+      } catch {
+        sound = false;
+      }
+    }
+    soundBtn.textContent = `Suara: ${sound ? 'aktif' : 'mati'}`;
+    soundBtn.setAttribute('aria-pressed', sound);
+  };
+}
 
 /**
  * Factory untuk membuat keping koin atau striker
@@ -87,6 +154,7 @@ function shoot() {
   active = true;
   shots++;
   stats();
+  playSound('hit', speed * 0.7);
   say('Tembakan meluncur…');
 }
 
@@ -170,6 +238,7 @@ function update() {
         p.sunk = true;
         p.vx = 0;
         p.vy = 0;
+        playSound('pocket');
         continue;
       }
 
@@ -178,6 +247,8 @@ function update() {
         if (p[axis] < 27 + p.r || p[axis] > 573 - p.r) {
           p[axis] = Math.max(27 + p.r, Math.min(573 - p.r, p[axis]));
           p[axis === 'x' ? 'vx' : 'vy'] *= -0.83;
+          const speed = Math.hypot(p.vx, p.vy);
+          if (speed > 0.6) playSound('wall', speed);
         }
       }
     }
@@ -209,6 +280,7 @@ function update() {
             a.vy -= v * ny * 0.95;
             b.vx += v * nx * 0.95;
             b.vy += v * ny * 0.95;
+            if (v > 0.4) playSound('hit', v);
           }
         }
       }
