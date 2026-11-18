@@ -1,0 +1,68 @@
+# AGENTS.md — Little Arcade Autonomous Development Guide
+
+Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembangkan, dan memelihara proyek **Little Arcade**.
+
+---
+
+## 1. Aturan Kerja Agen (Agent Work Protocol)
+
+1. **Eksekusi Mandiri (Autonomous Execution):**
+   * Setiap tugas dikerjakan secara berurutan dan tuntas tanpa memerlukan konfirmasi manual untuk setiap langkah teknis.
+   * Setelah sebuah tugas selesai diverifikasi, segera tandai statusnya menjadi `[x]` pada daftar tugas.
+   * **Wajib langsung melakukan `git commit` dan `git push` ke `origin/main`** setelah setiap tugas tuntas.
+   * Langsung lanjutkan ke tugas berikutnya hingga seluruh roadmap selesai.
+
+2. **Kualitas Kode & Standar Arsitektur:**
+   * Mempertahankan filosofi *zero-dependency / vanilla web* (HTML5, modern CSS3, ES6+ JavaScript).
+   * Menjaga performa tetap *ultra-fast*, *offline-first*, dan desain *retro-modern arcade* yang konsisten.
+   * Seluruh perubahan wajib menjaga kompatibilitas lintas browser dan perangkat (desktop & mobile).
+
+---
+
+## 2. Gambaran Proyek (Project Overview)
+
+* **Nama:** Little Arcade (`a little arcade.`)
+* **Repositori:** `https://github.com/AmirulJusticia0507/scrabble.git`
+* **Permainan:**
+  1. **Scrabble** (`index.html`, `scrabble.js`): Latihan kata papan 10×10 dengan kamus offline 248k kata bahasa Inggris & lookup definisi online.
+  2. **Karambol** (`index2.html`, `carrom.js`): Simulasi fisika karambol 2D dengan *sub-stepping*, tabrakan elastis, kontrol mouse slingshot & keyboard.
+  3. **Pachinko** (`index3.html`, `pachinko.js`): Simulasi bola jatuh beruntun, pasak dinamis, dan efek suara Web Audio API sintetis.
+* **Komponen Bersama:**
+  * `arcade.css`: Dark-mode theme, Space Grotesk & DM Sans typography, responsive layout.
+  * `arcade.js`: Dynamic template injector (header, navigation, footer), localStorage helpers.
+
+---
+
+## 3. Daftar Tugas & Roadmap Pengembangan
+
+- [x] **Task 1: Inisialisasi Lingkungan & Manajemen Repositori**
+  - Buat file `agents.md` berisi panduan kerja agen dan daftar tugas terperinci.
+  - Tambahkan file `.gitignore` standar web.
+  - Bersihkan file artefak kosong `game scrabble amirul.txt`.
+  - Commit & push ke repository.
+
+- [ ] **Task 2: Refactoring & Formatisasi Kode Inti**
+  - Format ulang JavaScript yang padat/semi-minified (`arcade.js`, `scrabble.js`, `carrom.js`, `pachinko.js`) menjadi kode terstruktur, bersih, dan berorientasi modularitas.
+  - Pertahankan seluruh fungsionalitas dan logika eksisting tanpa regresi.
+  - Commit & push ke repository.
+
+- [ ] **Task 3: Efek Suara Web Audio API untuk Karambol (Carrom Sound FX)**
+  - Implementasikan sound engine menggunakan Web Audio API pada `carrom.js` (suara tabrakan koin, pantulan tepi papan, dan koin masuk lubang).
+  - Tambahkan tombol kontrol toggle suara di `index2.html` konsisten dengan Pachinko.
+  - Commit & push ke repository.
+
+- [ ] **Task 4: Peningkatan Gameplay Scrabble (Petak Bonus & Skor Dinamis)**
+  - Tambahkan petak bonus (Double Letter `2L` dan Double Word `2W`) pada papan 10×10.
+  - Perbarui style di `arcade.css` dan kalkulasi skor di `scrabble.js` untuk melipatgandakan poin secara akurat.
+  - Perbarui petunjuk permainan di `index.html`.
+  - Commit & push ke repository.
+
+- [ ] **Task 5: Efek Visual & Partikel Pachinko (Visual FX & Feedback)**
+  - Tambahkan partikel visual / ledakan bintang kecil saat bola mengenai pasak atau mendarat di slot poin tinggi (terutama slot 50).
+  - Tingkatkan kepuasan visual pemain (*game feel* / *juice*).
+  - Commit & push ke repository.
+
+- [ ] **Task 6: Verifikasi Akhir & Dokumentasi Penutup**
+  - Uji seluruh ketiga game (Scrabble, Karambol, Pachinko) untuk memastikan tidak ada error JavaScript di console.
+  - Perbarui status seluruh task di `agents.md` menjadi selesai.
+  - Commit & push penutup.
