@@ -62,7 +62,19 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Tingkatkan kepuasan visual pemain (*game feel* / *juice*).
   - Commit & push ke repository.
 
-- [ ] **Task 6: Verifikasi Akhir & Dokumentasi Penutup**
+- [x] **Task 6: Verifikasi Akhir & Dokumentasi Penutup**
   - Uji seluruh ketiga game (Scrabble, Karambol, Pachinko) untuk memastikan tidak ada error JavaScript di console.
   - Perbarui status seluruh task di `agents.md` menjadi selesai.
   - Commit & push penutup.
+
+---
+
+## 4. Riwayat Pengerjaan (Changelog)
+
+* **Task 1 (`a79963e`):** Inisialisasi panduan operasional `agents.md`, setup `.gitignore`, pembersihan file kosong `game scrabble amirul.txt`.
+* **Task 2 (`9b3ee23`):** Refactoring format kode JavaScript (`arcade.js`, `scrabble.js`, `carrom.js`, `pachinko.js`) agar rapi, modular, dan mudah dipelihara.
+* **Task 3 (`7c9d95b`):** Penambahan sound engine sintetis Web Audio API pada Karambol (suara benturan koin, pantulan kayu tepi, koin masuk kantung) beserta tombol toggle suara di UI.
+* **Task 4 (`8147cc6`):** Penambahan petak bonus 2L (Double Letter) dan 2W (Double Word) pada papan Scrabble 10×10 dengan kalkulasi skor dinamis.
+* **Task 5 (`fe020bd`):** Penambahan sistem partikel visual FX pada Pachinko saat benturan pasak dan ledakan confetti/bintang saat jackpot 50 poin.
+* **Task 6:** Verifikasi lintas file dan dokumentasi akhir.
+
