@@ -1,0 +1,61 @@
+{
+  "name": "Little Arcade — Retro Modern Games",
+  "short_name": "Little Arcade",
+  "description": "Koleksi permainan arcade web offline-first: Scrabble santai dengan kamus offline 248k kata, simulasi fisika Karambol 2D, dan Pachinko.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#111514",
+  "theme_color": "#111514",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scrabble (01)",
+      "short_name": "Scrabble",
+      "description": "Mainkan Scrabble mode santai 10x10 dengan kamus offline",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Karambol (02)",
+      "short_name": "Karambol",
+      "description": "Simulasi fisika meja karambol 2D",
+      "url": "./index2.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pachinko (03)",
+      "short_name": "Pachinko",
+      "description": "Jatuhkan bola di antara pasak rintangan",
+      "url": "./index3.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

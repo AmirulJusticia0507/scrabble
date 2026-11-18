@@ -67,6 +67,22 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Perbarui status seluruh task di `agents.md` menjadi selesai.
   - Commit & push penutup.
 
+- [x] **Task 7: Setup PWA Manifest & App Icons**
+  - Buat direktori `icons/` dan buat icon aset SVG dan PNG (192×192 & 512×512) dengan tema visual Little Arcade.
+  - Buat file `manifest.json` lengkap dengan metadata PWA, start_url, theme_color, dan shortcuts ke setiap permainan.
+  - Tambahkan meta tags PWA (manifest, theme-color, apple-touch-icon, mobile-web-app) di `index.html`, `index2.html`, dan `index3.html`.
+  - Commit & push ke repository.
+
+- [ ] **Task 8: Implementasi Service Worker & Offline Caching Engine**
+  - Buat `sw.js` (Service Worker) dengan strategi caching offline-first untuk shell, CSS, JS, dan kamus lokal.
+  - Tambahkan registrasi Service Worker di `arcade.js` secara otomatis.
+  - Commit & push ke repository.
+
+- [ ] **Task 9: Konfigurasi Vercel & Optimasi Deployment**
+  - Buat file konfigurasi `vercel.json` dengan caching header, clean URLs, dan header PWA `Service-Worker-Allowed`.
+  - Buat `README.md` utama di root repositori dengan dokumentasi proyek, panduan PWA, dan panduan deploy ke Vercel.
+  - Commit & push penutup.
+
 ---
 
 ## 4. Riwayat Pengerjaan (Changelog)
