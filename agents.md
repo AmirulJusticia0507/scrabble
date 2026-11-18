@@ -78,7 +78,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Tambahkan registrasi Service Worker di `arcade.js` secara otomatis.
   - Commit & push ke repository.
 
-- [ ] **Task 9: Konfigurasi Vercel & Optimasi Deployment**
+- [x] **Task 9: Konfigurasi Vercel & Optimasi Deployment**
   - Buat file konfigurasi `vercel.json` dengan caching header, clean URLs, dan header PWA `Service-Worker-Allowed`.
   - Buat `README.md` utama di root repositori dengan dokumentasi proyek, panduan PWA, dan panduan deploy ke Vercel.
   - Commit & push penutup.
@@ -92,5 +92,9 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
 * **Task 3 (`7c9d95b`):** Penambahan sound engine sintetis Web Audio API pada Karambol (suara benturan koin, pantulan kayu tepi, koin masuk kantung) beserta tombol toggle suara di UI.
 * **Task 4 (`8147cc6`):** Penambahan petak bonus 2L (Double Letter) dan 2W (Double Word) pada papan Scrabble 10×10 dengan kalkulasi skor dinamis.
 * **Task 5 (`fe020bd`):** Penambahan sistem partikel visual FX pada Pachinko saat benturan pasak dan ledakan confetti/bintang saat jackpot 50 poin.
-* **Task 6:** Verifikasi lintas file dan dokumentasi akhir.
+* **Task 6 (`08324d4`):** Verifikasi lintas file dan dokumentasi penutup.
+* **Task 7 (`6dd8bab`):** Konfigurasi PWA Web App Manifest (`manifest.json`), meta tags mobile/retina, dan pembuatan icon vektor SVG serta PNG (192px, 512px, maskable).
+* **Task 8 (`698af2c`):** Pembuatan Service Worker (`sw.js`) dengan strategi offline-first caching dan registrasi otomatis di `arcade.js`.
+* **Task 9:** Konfigurasi deployment `vercel.json` (clean URLs, rewrites, headers caching PWA) dan pembuatan `README.md` utama.
+
 
