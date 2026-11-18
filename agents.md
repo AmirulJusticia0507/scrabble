@@ -57,7 +57,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
   - Perbarui petunjuk permainan di `index.html`.
   - Commit & push ke repository.
 
-- [ ] **Task 5: Efek Visual & Partikel Pachinko (Visual FX & Feedback)**
+- [x] **Task 5: Efek Visual & Partikel Pachinko (Visual FX & Feedback)**
   - Tambahkan partikel visual / ledakan bintang kecil saat bola mengenai pasak atau mendarat di slot poin tinggi (terutama slot 50).
   - Tingkatkan kepuasan visual pemain (*game feel* / *juice*).
   - Commit & push ke repository.

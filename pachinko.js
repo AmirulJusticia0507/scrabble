@@ -1,6 +1,6 @@
 /**
  * Little Arcade — Pachinko (Game 03)
- * Simulasi bola jatuh beruntun dengan pasak defleksi, slot poin, dan efek suara sintetis Web Audio API.
+ * Simulasi bola jatuh beruntun dengan pasak defleksi, slot poin, efek partikel FX, dan suara Web Audio API.
  */
 
 const canvas = $('game');
@@ -9,6 +9,7 @@ const values = [10, 25, 50, 25, 10];
 
 let pegs = [];
 let balls = [];
+let particles = [];
 let queue = 0;
 let nextSpawn = 0;
 let total = 0;
@@ -50,7 +51,7 @@ function board() {
 /**
  * Menghasilkan nada audio sintetis (Web Audio API)
  */
-function tone(freq) {
+function tone(freq, duration = 0.12) {
   if (!sound || !audio) return;
   try {
     const o = audio.createOscillator();
@@ -60,10 +61,10 @@ function tone(freq) {
 
     o.frequency.value = freq;
     g.gain.setValueAtTime(0.035, audio.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.12);
+    g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + duration);
 
     o.start();
-    o.stop(audio.currentTime + 0.12);
+    o.stop(audio.currentTime + duration);
   } catch {}
 }
 
@@ -92,6 +93,29 @@ function lock(value) {
   $('drop').textContent = value ? 'Bola sedang turun…' : 'Jatuhkan 3 bola ↓';
 }
 
+/**
+ * Munculkan partikel FX (percikan pasak atau ledakan kembang api slot)
+ */
+function spawnParticles(x, y, count, colors, isJackpot = false) {
+  for (let i = 0; i < count; i++) {
+    const angle = isJackpot ? -Math.PI / 2 + (Math.random() - 0.5) * 1.6 : Math.random() * Math.PI * 2;
+    const speed = isJackpot ? 2 + Math.random() * 4.5 : 1 + Math.random() * 2.2;
+    const maxLife = isJackpot ? 35 + Math.floor(Math.random() * 20) : 12 + Math.floor(Math.random() * 10);
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    particles.push({
+      x,
+      y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      color,
+      size: isJackpot ? 2.5 + Math.random() * 2 : 1.5 + Math.random() * 1.5,
+      life: maxLife,
+      maxLife
+    });
+  }
+}
+
 // Mulai putaran drop
 $('drop').onclick = () => {
   if (queue || balls.length) return;
@@ -110,6 +134,7 @@ $('reset').onclick = () => {
   if (queue || balls.length) return;
   total = 0;
   count = 0;
+  particles = [];
   $('score').textContent = 0;
   $('drops').textContent = 0;
   $('history').innerHTML = '';
@@ -135,20 +160,28 @@ function finish(ball) {
   $('best').textContent = best;
   $('empty').hidden = true;
 
+  const isJackpot = score === 50;
+  const jackpotColors = ['#d1f478', '#edc778', '#ffffff', '#e8f5b4'];
+  const regularColors = ['#9ec276', '#a7b99a', '#d1f478'];
+
+  // Efek partikel kembang api slot
+  spawnParticles(ball.x, 435, isJackpot ? 28 : 12, isJackpot ? jackpotColors : regularColors, isJackpot);
+
   const li = document.createElement('li');
-  li.innerHTML = `<span><span style="color:var(--accent)">●</span> &nbsp; Bola ${String(count).padStart(2, '0')}</span><strong>+${score} poin</strong>`;
+  const bonusBadge = isJackpot ? ' <span style="color:var(--gold);font-weight:700">★ JACKPOT!</span>' : '';
+  li.innerHTML = `<span><span style="color:var(--accent)">●</span> &nbsp; Bola ${String(count).padStart(2, '0')}${bonusBadge}</span><strong>+${score} poin</strong>`;
   $('history').prepend(li);
 
   while ($('history').children.length > 30) {
     $('history').lastChild.remove();
   }
 
-  highlights[slot] = 45;
-  tone(350 + score * 9);
+  highlights[slot] = isJackpot ? 60 : 45;
+  tone(isJackpot ? 880 : 350 + score * 9, isJackpot ? 0.22 : 0.12);
 }
 
 /**
- * Update simulasi fisika bola & deteksi tumbukan pasak
+ * Update simulasi fisika bola, pasak, dan partikel
  */
 function update() {
   // Spawn antrean bola
@@ -178,6 +211,7 @@ function update() {
     if (b.x < 29 || b.x > 431) {
       b.x = Math.max(29, Math.min(431, b.x));
       b.vx *= -0.8;
+      spawnParticles(b.x, b.y, 2, ['#a7b99a']);
     }
 
     // Tabrakan dengan pasak (Peg collision)
@@ -197,6 +231,7 @@ function update() {
           b.vx -= 1.65 * v * nx;
           b.vy -= 1.65 * v * ny;
           b.vx += (Math.random() - 0.5) * 1.4; // Defleksi acak kecil
+          spawnParticles(p.x, p.y, 3, ['#d1f478', '#e8f5b4']);
           tone(700);
         }
       }
@@ -211,6 +246,18 @@ function update() {
     }
   }
 
+  // Update partikel
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.08; // Efek gravitasi halus
+    p.life--;
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+
   // Fade out highlight slot
   highlights = highlights.map((v) => Math.max(0, v - 1));
 
@@ -222,7 +269,7 @@ function update() {
 }
 
 /**
- * Gambar seluruh elemen papan Pachinko
+ * Gambar seluruh elemen papan Pachinko beserta partikel FX
  */
 function draw() {
   ctx.clearRect(0, 0, 460, 490);
@@ -296,6 +343,17 @@ function draw() {
     ctx.arc(b.x, b.y, 7, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
+  }
+
+  // Render partikel visual FX
+  for (const p of particles) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 }
 
