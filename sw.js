@@ -3,7 +3,7 @@
  * Menyediakan kapabilitas Progressive Web App (PWA) & Offline-First Caching
  */
 
-const CACHE_NAME = 'little-arcade-v1';
+const CACHE_NAME = 'little-arcade-v2';
 
 // Aset inti yang di-cache saat instalasi
 const CORE_ASSETS = [
@@ -34,7 +34,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: Bersihkan cache versi lama
+// Activate: Bersihkan cache versi lama dan klaim kontrol klien secara instan
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -50,7 +50,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Tangani request secara cerdas (Offline-First untuk aset lokal, Network-First untuk API eksternal)
+// Fetch: Tangani request secara cerdas
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
@@ -79,10 +79,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Local assets (Stale-while-revalidate / Cache-first)
+  // Local assets (Cache-first dengan network fallback)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request)
         .then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const responseClone = networkResponse.clone();
@@ -97,8 +100,6 @@ self.addEventListener('fetch', (event) => {
             return caches.match('index.html');
           }
         });
-
-      return cachedResponse || fetchPromise;
     })
   );
 });

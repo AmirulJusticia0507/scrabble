@@ -101,6 +101,7 @@ Dokumen ini menjadi pedoman operasional bagi agen AI dalam mengelola, mengembang
 * **Task 7 (`6dd8bab`):** Konfigurasi PWA Web App Manifest (`manifest.json`), meta tags mobile/retina, dan pembuatan icon vektor SVG serta PNG (192px, 512px, maskable).
 * **Task 8 (`698af2c`):** Pembuatan Service Worker (`sw.js`) dengan strategi offline-first caching dan registrasi otomatis di `arcade.js`.
 * **Task 9 (`769c7ce`):** Konfigurasi deployment `vercel.json` (clean URLs, rewrites, headers caching PWA) dan pembuatan `README.md` utama.
-* **Task 10:** Redesain modul petunjuk "Cara Bermain" dengan penomoran badge, tips box, tombol keyboard `<kbd>`, chip bonus, dan penambahan panduan Pachinko.
+* **Task 10 (`1a42bac`):** Redesain modul petunjuk "Cara Bermain" dengan penomoran badge, tips box, tombol keyboard `<kbd>`, chip bonus, dan penambahan panduan Pachinko.
+* **Fix Vercel Routing:** Nonaktifkan `cleanUrls` di `vercel.json` dan naikkan versi Service Worker ke `little-arcade-v2` untuk mengatasi isu 308 redirect pada `index2.html` dan `index3.html`.
 
 
